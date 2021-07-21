@@ -175,7 +175,10 @@ def requires_auth(permission=''):
             try:
                 payload = verify_decode_jwt(token)
             except:
-                abort(401)
+                raise AuthError({
+                    'code': 'no_payload',
+                    'description': 'Payload not found.'
+                }, 400)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
 
