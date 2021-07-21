@@ -28,6 +28,8 @@ db_drop_and_create_all()
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+
+
 @app.route('/drinks', methods=['GET'])
 def retrieve_drinks():
 
@@ -42,9 +44,10 @@ def retrieve_drinks():
             'success': True,
             "drinks": drinks
         })
-    
+
     except BaseException:
         abort(400)
+
 
 '''
 @TODO implement endpoint
@@ -54,6 +57,8 @@ def retrieve_drinks():
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+
+
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def retrieve_drinks_detail(permission):
@@ -68,7 +73,7 @@ def retrieve_drinks_detail(permission):
             'success': True,
             "drinks": drinks
         })
-    
+
     except BaseException:
         abort(400)
 
@@ -82,7 +87,9 @@ def retrieve_drinks_detail(permission):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks', methods = ['POST'])
+
+
+@app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def create_drink(permission):
     body = request.get_json()
@@ -101,10 +108,10 @@ def create_drink(permission):
             'success': True,
             'drinks': [drink.long()]
         })
-    
+
     except BaseException:
         abort(422)
-    
+
 
 '''
 @TODO implement endpoint
@@ -117,6 +124,8 @@ def create_drink(permission):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+
+
 @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def patch_drink(permission, drink_id):
@@ -124,15 +133,15 @@ def patch_drink(permission, drink_id):
     drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
     if drink is None:
         abort(404)
-    
+
     body = request.get_json()
 
     if 'title' in body:
-       drink.title = body['title']
-    
+        drink.title = body['title']
+
     if 'recipe' in body:
         drink.recipe = body['recipe']
-    
+
     try:
         drink.update()
 
@@ -140,9 +149,10 @@ def patch_drink(permission, drink_id):
             'success': True,
             'drinks': [drink.long()]
         })
-    
+
     except BaseException:
         abort(422)
+
 
 '''
 @TODO implement endpoint
@@ -154,14 +164,16 @@ def patch_drink(permission, drink_id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
+
+
 @app.route('/drinks/<int:drink_id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drink(permission, drink_id):
 
-    drink = Drink.query.filter(Drink.id==drink_id).one_or_none()
+    drink = Drink.query.filter(Drink.id == drink_id).one_or_none()
     if drink is None:
         abort(404)
-    
+
     try:
         drink.delete()
 
@@ -173,10 +185,13 @@ def delete_drink(permission, drink_id):
     except BaseException:
         abort(422)
 
+
 # Error Handling
 '''
 Example error handling for unprocessable entity
 '''
+
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -201,6 +216,8 @@ def unprocessable(error):
 @TODO implement error handler for 404
     error handler should conform to general task above
 '''
+
+
 @app.errorhandler(404)
 def bad_request(error):
     return jsonify({
@@ -209,10 +226,12 @@ def bad_request(error):
         "message": "Resource Not Found"
     }), 404
 
+
 '''
 @TODO implement error handler for AuthError
     error handler should conform to general task above
 '''
+
 
 @app.errorhandler(AuthError)
 def handle_auth_error(error):
@@ -221,6 +240,7 @@ def handle_auth_error(error):
         "error": error.status_code,
         "message": error.error
     }), error.status_code
+
 
 @app.errorhandler(401)
 def unaothorized(error):
