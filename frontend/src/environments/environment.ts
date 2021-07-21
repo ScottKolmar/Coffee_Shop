@@ -9,6 +9,6 @@ export const environment = {
     url: 'dev-767-wd4e.us.auth0.com', // the auth0 domain prefix
     audience: 'Drink', // the audience set for the auth0 app
     clientId: 'UjhpdZFNp4UKDYAyjf8zMKLGiLL9tNu2', // the client id generated for the auth0 app
-    callbackURL: 'https://127.0.0.1:5000/', // the base url of the running ionic application. 
+    callbackURL: 'http://127.0.0.1:8100/', // the base url of the running ionic application. 
   }
 };
